@@ -47,3 +47,8 @@ cp your_tnsnames.ora ./<br />
 136 line ：(*C.OCIServer)(c.svc),---》(*C.OCISvcCtx)(c.svc),<br />
 263 line ：(*C.OCIServer)(s.c.svc), (*C.OCISvcCtx)(s.c.svc),<br />
 383 line：(*C.OCIServer)(s.c.svc), (*C.OCISvcCtx)(s.c.svc),<br />
+
+cd db_exporter<br />
+vi config.ini;edit your conf
+go build oracle_exporter.go<br /> 
+./oracle_exporter or ./oracle_exporter --port your_port
