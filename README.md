@@ -2,12 +2,12 @@
 
 install oracle-driver on centos/rhel
 1.first:you hava get these file file as follow:
-"github.com/wendal/go-oci8"
+github.com/wendal/go-oci8
 oracle-instantclient11.2-basic-11.2.0.1.0-1.x86_64.zip
 oracle-instantclient11.2-sdk-11.2.0.1.0-1.x86_64.zip
 pkgconfig-0.17.2.tar.bz2
 
-2.second,install these
+2.second,install these:
 unzip oracle-instantclient11.2-basic-11.2.0.1.0-1.x86_64.zip
 unzip oracle-instantclient11.2-sdk-11.2.0.1.0-1.x86_64.zip
 tar -zcvf instantclient_11_2.tgz instantclient_11_2
