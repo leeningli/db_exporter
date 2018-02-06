@@ -29,12 +29,6 @@ func readConfig() {
 
 func init() {
 	readConfig()
-	/*
-	for k, value := range DB_TOPICS {
-		if value != "" {
-			fmt.Printf("%d:%s\n", k, value)
-		}
-	}*/
 }
 
 func checkError(err error) {
@@ -43,21 +37,6 @@ func checkError(err error) {
 	}
 }
 
-func pre_exporter() {
-	for _, value := range DB_TOPICS {
-		if value != "" {
-			fmt.Println("value==", value)
-			db_index := strings.Split(string(value), ":")[0]
-			fmt.Println("db_index==", db_index)
-			if strings.ToLower(db_index) == "mysql" {
-				mysql_exporter(value)
-			} else {
-				fmt.Println("config:", value, " is error.")
-				os.Exit(1)
-			}
-		}
-	}
-}
 
 func mysql_exporter(appname string) (string) {
 	var metrics string = ""
@@ -120,7 +99,7 @@ func main() {
 	}
 	http.HandleFunc("/metrics", ExporterHandler)
 	url := fmt.Sprintf("%s:%s", host, *port)
-	fmt.Println("url==", url)
+	fmt.Println("url==", url ,"/metrics")
 	err = http.ListenAndServe(url, nil)
 	checkError(err)
 }
