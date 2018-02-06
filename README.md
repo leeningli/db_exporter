@@ -1,10 +1,10 @@
-需要下载的：
-"github.com/wendal/go-oci8"
-oracle-instantclient11.2-basic-11.2.0.1.0-1.x86_64.zip
-oracle-instantclient11.2-sdk-11.2.0.1.0-1.x86_64.zip
-pkgconfig-0.17.2.tar.bz2
+需要下载的：<br />
+"github.com/wendal/go-oci8" <br />
+oracle-instantclient11.2-basic-11.2.0.1.0-1.x86_64.zip<br />
+oracle-instantclient11.2-sdk-11.2.0.1.0-1.x86_64.zip<br />
+pkgconfig-0.17.2.tar.bz2<br />
 
-unzip oracle-instantclient11.2-basic-11.2.0.1.0-1.x86_64.zip
+unzip oracle-instantclient11.2-basic-11.2.0.1.0-1.x86_64.zip<br />
 unzip oracle-instantclient11.2-sdk-11.2.0.1.0-1.x86_64.zip
 tar -zcvf instantclient_11_2.tgz instantclient_11_2
 mv instantclient_11_2.tgz /usr/lib
