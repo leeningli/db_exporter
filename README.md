@@ -1,12 +1,9 @@
-#db_exporter
-
-install oracle-driver on centos/rhel
-1.first:you hava get these file file as follow:
+需要下载的：
+"github.com/wendal/go-oci8"
 oracle-instantclient11.2-basic-11.2.0.1.0-1.x86_64.zip
 oracle-instantclient11.2-sdk-11.2.0.1.0-1.x86_64.zip
 pkgconfig-0.17.2.tar.bz2
 
-2.second,install these:
 unzip oracle-instantclient11.2-basic-11.2.0.1.0-1.x86_64.zip
 unzip oracle-instantclient11.2-sdk-11.2.0.1.0-1.x86_64.zip
 tar -zcvf instantclient_11_2.tgz instantclient_11_2
@@ -32,7 +29,7 @@ vim oci8.pc
 	Libs.private: 
 	Cflags: -I${includedir}
 
-3:set your env
+7、.bashrc 文件中添加系统变量
 export GOHOME=/docker/home/docker/go
 export GOROOT=$GOHOME/go
 export GOPATH=$GOHOME/myproject
@@ -42,13 +39,9 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME
 export PKG_CONFIG_PATH=/usr/lib64/pkgconfig
 PATH=$PATH:$HOME/bin:$GOROOT/bin
 
-4.create tnsnames.ora
-create dir:network/admin on $GOHOME/instantclient_11_2
-create file:tnsnames.ora on $GOHOME/instantclient_11_2/network/admin
+$GOHOME/instantclient_11_2下创建network/admin，将tnsnames.ora文件放置此处
 
-5.change the source code:
-vim /src/github.com/wendal/go-oci8/oci8.go
-119:(**C.OCIServer)(unsafe.Pointer(&conn.svc)),----->(**C.OCISvcCtx)(unsafe.Pointer(&conn.svc)),
-136:(*C.OCIServer)(c.svc),----->(*C.OCISvcCtx)(c.svc),
-263:(*C.OCIServer)(c.svc),----->(*C.OCISvcCtx)(s.c.svc),
-383:(*C.OCIServer)(c.svc),----->(*C.OCISvcCtx)(s.c.svc),
+119行：(**C.OCIServer)(unsafe.Pointer(&conn.svc)),---》(**C.OCISvcCtx)(unsafe.Pointer(&conn.svc)),
+136行：(*C.OCIServer)(c.svc),---》(*C.OCISvcCtx)(c.svc),
+263行：(*C.OCIServer)(c.svc), (*C.OCISvcCtx)(s.c.svc),
+383行：(*C.OCIServer)(c.svc), (*C.OCISvcCtx)(s.c.svc),
