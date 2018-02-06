@@ -9,7 +9,6 @@ import(
 	"log"
 	"bytes"
 	"os/exec"
-	"strconv"
 	"io"
 )
 
@@ -45,26 +44,30 @@ func exec_shell(s string) (string){
     return out.String()
 }
 
-func ExporterHandler(host string, w http.ResponseWriter, r *http.Request){
+func ExporterHandler(w http.ResponseWriter, r *http.Request){
+	host := get_hostip()
 	var metrics_url string = ""
+	io.WriteString(w, "#this is monitor for host, dev by lee\n")
 	uptime_cmd := `uptime|awk '{print $11}'|awk -F"," '{print $1}'`
-	metrics_url = fmt.Sprintf("uptime {host=%s} %s\n", host, exec_shell(uptime_cmd))
+	metrics_url = fmt.Sprintf("uptime{host=\"%s\"} %s\n", host, exec_shell(uptime_cmd))
 	io.WriteString(w, metrics_url)
-
+	
+	
 	logstash_cmd := `ps -ef|grep -v grep|grep logstash|awk '{print $2}'|wc -l`
-	metrics_url = fmt.Sprintf("logstashIsExist {host=%s} %s\n", host, exec_shell(logstash_cmd))
+	metrics_url = fmt.Sprintf("logstashIsExist{host=\"%s\"} %s\n", host, exec_shell(logstash_cmd))
 	io.WriteString(w, metrics_url)
 
 	flume_cmd := `ps -ef|grep -v grep|grep flume|awk '{print $2}'|wc -l`
-	metrics_url = fmt.Sprintf("flumeIsExist {host=%s} %s\n", host, exec_shell(flume_cmd))
+	metrics_url = fmt.Sprintf("flumeIsExist{host=\"%s\"} %s\n", host, exec_shell(flume_cmd))
 	io.WriteString(w, metrics_url)
 
 	zabbix_cmd := `ps -ef|grep -v grep|grep zabbix|awk '{print $2}'|wc -l`
-	metrics_url = fmt.Sprintf("zabbixIsExist {host=%s} %s\n", host, exec_shell(zabbix_cmd))
+	metrics_url = fmt.Sprintf("zabbixIsExist{host=\"%s\"} %s\n", host, exec_shell(zabbix_cmd))
 	io.WriteString(w, metrics_url)
 
+	io.WriteString(w, "#this is monitor for salt process is exist\n")
 	salt_cmd := `ps -ef|grep -v grep|grep salt|awk '{print $2}'|wc -l`
-	metrics_url = fmt.Sprintf("saltIsExist {host=%s} %s\n", host, exec_shell(salt_cmd))
+	metrics_url = fmt.Sprintf("saltIsExist{host=\"%s\"} %s\n", host, exec_shell(salt_cmd))
 	io.WriteString(w, metrics_url)
 }
 
@@ -72,11 +75,11 @@ func main(){
 	port := flag.String("port", "30083", "Input your exporter port")
 	flag.Parse()
 	host := get_hostip()
-    fmt.Println("port==", *port)
+    	fmt.Println("port==", *port)
 	http.HandleFunc("/metrics", ExporterHandler)
 	url := fmt.Sprintf("%s:%s", host, *port)
-	fmt.Println("url=", url, "/metrics")
-	err = http.ListenAndServe(url, nil)
+	fmt.Println("url=", url+"/metrics")
+	err := http.ListenAndServe(url, nil)
 	if err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
