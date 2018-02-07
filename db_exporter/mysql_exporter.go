@@ -57,7 +57,7 @@ func mysql_exporter(appname string) (string) {
 		var value int
 		err = rows.Scan(&tag,&value)
 		if err == nil {
-			res := fmt.Sprintf("%s {host=%s,port=%s} %d\n", tag, ip, port, value)
+			res := fmt.Sprintf("%s{host=%s,port=%s} %d\n", tag, ip, port, value)
 			metrics = metrics + res
 		}
 	}
