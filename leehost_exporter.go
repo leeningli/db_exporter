@@ -69,6 +69,12 @@ func ExporterHandler(w http.ResponseWriter, r *http.Request){
 	salt_cmd := `ps -ef|grep -v grep|grep salt|awk '{print $2}'|wc -l`
 	metrics_url = fmt.Sprintf("saltIsExist{host=\"%s\"} %s\n", host, exec_shell(salt_cmd))
 	io.WriteString(w, metrics_url)
+	
+	io.WriteString(w, "#this is monitor for openfiles \n")
+	current_user := exec_shell("whoami")
+	openfile_cmd := `lsof |awk -v user=${current_user} '{if($3==user) print $0}'|wc -l`
+	metrics_url = fmt.Sprintf("openfiles{host=\"%s\",user=\"%s\"} %s\n", host, current_user, exec_shell(openfile_cmd))
+	io.WriteString(w, metrics_url)
 }
 
 func main(){
