@@ -10,8 +10,35 @@ import(
 	"bytes"
 	"os/exec"
 	"io"
+	"encoding/json"
 )
 
+type CHECKS struct {
+	Http string `json:"http"`
+	Interval string `json:"interval"`
+}
+
+type Consul struct {
+	Id string `json:"id"`
+	Name string `json:"name"`
+	Address string `json:"address"`
+	Port int `json:"port"`
+	Tag string `json:"tag"`
+	Checks CHECKS `json:"checks"`
+}
+
+func RegisterConsul(id, servicename_consul, ip, port, tag, interval, consul_register_url string) error {
+	metrics := fmt.Sprintf("http://%s:%s/metrics", ip, port)
+	port_int, err := strconv.Atoi(port)
+	if err != nil {
+	        log.Fatal(err)
+	}
+	cmd := fmt.Sprintf("curl -X PUT -d '{\"id\": \"%s\",\"name\": \"%s\",\"address\": \"%s\",\"port\": %d,\"tags\": [\"%s\"],\"checks\":[{\"http\":\"%s\",\"interval\": \"%s\"}]}'", id, servicename_consul, ip, port_int, tag, metrics, interval)
+	cmd = fmt.Sprintf("%s %s", cmd, consul_register_url)
+	fmt.Println("cmd==", cmd)
+	fmt.Println(exec_shell(cmd))
+	return nil
+}
 
 func get_hostip() (string){
 	addrs, err := net.InterfaceAddrs()
@@ -82,6 +109,7 @@ func main(){
 	flag.Parse()
 	host := get_hostip()
     	fmt.Println("port==", *port)
+	RegisterConsul("yourid","yourname", host, *port, "yourtag", "15s", "http://your_consul_ip:your_consul_port/v1/agent/service/register")
 	http.HandleFunc("/metrics", ExporterHandler)
 	url := fmt.Sprintf("%s:%s", host, *port)
 	fmt.Println("url=", url+"/metrics")
